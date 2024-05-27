@@ -43,6 +43,10 @@ public class LectureController {
         }
 
         Lecture lecture = modelMapper.map(lectureReqDto, Lecture.class);
+
+        //offline, free 필드의 값을 설정
+        lecture.update();
+
         Lecture addedLecture = lectureRepository.save(lecture);
         WebMvcLinkBuilder selfLinkBuilder =
                 WebMvcLinkBuilder.linkTo(LectureController.class).slash(addedLecture.getId());
