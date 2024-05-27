@@ -1,6 +1,5 @@
 package com.boot3.myrestapi.lectures.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,19 +23,15 @@ public class Lecture {
     @Column(nullable = false)
     private String description;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @Column(nullable = false)
     private LocalDateTime beginEnrollmentDateTime;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @Column(nullable = false)
     private LocalDateTime closeEnrollmentDateTime;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @Column(nullable = false)
     private LocalDateTime beginLectureDateTime;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @Column(nullable = false)
     private LocalDateTime endLectureDateTime;
     
