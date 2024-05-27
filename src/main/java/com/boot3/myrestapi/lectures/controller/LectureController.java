@@ -1,5 +1,6 @@
 package com.boot3.myrestapi.lectures.controller;
 
+import com.boot3.myrestapi.lectures.dto.LectureReqDto;
 import com.boot3.myrestapi.lectures.models.Lecture;
 import com.boot3.myrestapi.lectures.models.LectureRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,8 @@ public class LectureController {
 //        this.lectureRepository = lectureRepository;
 //    }
     @PostMapping
-    public ResponseEntity<?> createLecture(@RequestBody Lecture lecture) {
+    public ResponseEntity<?> createLecture(@RequestBody LectureReqDto lectureReqDto) {
+        Lecture lecture = modelMapper.map(lectureReqDto, Lecture.class);
         Lecture addedLecture = lectureRepository.save(lecture);
         WebMvcLinkBuilder selfLinkBuilder =
                 WebMvcLinkBuilder.linkTo(LectureController.class).slash(addedLecture.getId());
