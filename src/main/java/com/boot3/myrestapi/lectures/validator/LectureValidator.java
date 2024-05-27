@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import java.time.LocalDateTime;
-
 @Component
 public class LectureValidator {
 	public void validate(LectureReqDto lectureReqDto, Errors errors) {
+		//maxPrice 0 보다 크면 maxPrice > basePrice 보다 커야 함
 		if(lectureReqDto.getBasePrice() > lectureReqDto.getMaxPrice() &&
 				lectureReqDto.getMaxPrice() != 0) {
 			//Field Error
