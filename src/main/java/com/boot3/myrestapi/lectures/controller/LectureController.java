@@ -1,6 +1,8 @@
 package com.boot3.myrestapi.lectures.controller;
 
 import com.boot3.myrestapi.lectures.dto.LectureReqDto;
+import com.boot3.myrestapi.lectures.dto.LectureResDto;
+import com.boot3.myrestapi.lectures.dto.hateoas.LectureResource;
 import com.boot3.myrestapi.lectures.models.Lecture;
 import com.boot3.myrestapi.lectures.models.LectureRepository;
 import com.boot3.myrestapi.lectures.validator.LectureValidator;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/api/lectures", produces = MediaTypes.HAL_JSON_VALUE)
@@ -41,17 +45,27 @@ public class LectureController {
         if(errors.hasErrors()) {
             return getErrors(errors);
         }
-
+        // ReqDTO => Entity 변환
         Lecture lecture = modelMapper.map(lectureReqDto, Lecture.class);
 
         //offline, free 필드의 값을 설정
         lecture.update();
 
         Lecture addedLecture = lectureRepository.save(lecture);
-        WebMvcLinkBuilder selfLinkBuilder =
-                WebMvcLinkBuilder.linkTo(LectureController.class).slash(addedLecture.getId());
+        // Entity => ResDTO 변환
+        LectureResDto lectureResDto = modelMapper.map(addedLecture, LectureResDto.class);
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(LectureController.class).slash(addedLecture.getId());
         URI createUri = selfLinkBuilder.toUri();
-        return ResponseEntity.created(createUri).body(addedLecture);
+
+        LectureResource lectureResource = new LectureResource(lectureResDto);
+        //Rel 'query-lectures' link 생성
+        lectureResource.add(linkTo(LectureController.class).withRel("query-lectures"));
+        //self link 생성
+        lectureResource.add(selfLinkBuilder.withSelfRel());
+        //Rel 'update-lecture' link 생성
+        lectureResource.add(selfLinkBuilder.withRel("update-lecture"));
+
+        return ResponseEntity.created(createUri).body(lectureResource);
     }
 
     private static ResponseEntity<Errors> getErrors(Errors errors) {
