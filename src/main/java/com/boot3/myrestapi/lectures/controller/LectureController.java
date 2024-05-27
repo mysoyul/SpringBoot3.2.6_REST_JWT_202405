@@ -3,6 +3,7 @@ package com.boot3.myrestapi.lectures.controller;
 import com.boot3.myrestapi.lectures.models.Lecture;
 import com.boot3.myrestapi.lectures.models.LectureRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -19,6 +20,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class LectureController {
     private final LectureRepository lectureRepository;
+    private final ModelMapper modelMapper;
 
     //Constructor Injection 생성자주입
 //    public LectureController(LectureRepository lectureRepository) {
