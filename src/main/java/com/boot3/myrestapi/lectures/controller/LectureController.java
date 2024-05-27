@@ -60,8 +60,6 @@ public class LectureController {
         LectureResource lectureResource = new LectureResource(lectureResDto);
         //Rel 'query-lectures' link 생성
         lectureResource.add(linkTo(LectureController.class).withRel("query-lectures"));
-        //self link 생성
-        lectureResource.add(selfLinkBuilder.withSelfRel());
         //Rel 'update-lecture' link 생성
         lectureResource.add(selfLinkBuilder.withRel("update-lecture"));
 
