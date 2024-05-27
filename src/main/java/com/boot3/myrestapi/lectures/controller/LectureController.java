@@ -54,7 +54,7 @@ public class LectureController {
         Lecture addedLecture = lectureRepository.save(lecture);
         // Entity => ResDTO 변환
         LectureResDto lectureResDto = modelMapper.map(addedLecture, LectureResDto.class);
-        WebMvcLinkBuilder selfLinkBuilder = linkTo(LectureController.class).slash(addedLecture.getId());
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(LectureController.class).slash(lectureResDto.getId());
         URI createUri = selfLinkBuilder.toUri();
 
         LectureResource lectureResource = new LectureResource(lectureResDto);
