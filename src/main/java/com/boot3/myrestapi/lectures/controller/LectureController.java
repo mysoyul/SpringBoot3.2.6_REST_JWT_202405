@@ -1,5 +1,6 @@
 package com.boot3.myrestapi.lectures.controller;
 
+import com.boot3.myrestapi.common.errors.ErrorsResource;
 import com.boot3.myrestapi.lectures.dto.LectureReqDto;
 import com.boot3.myrestapi.lectures.dto.LectureResDto;
 import com.boot3.myrestapi.lectures.dto.hateoas.LectureResource;
@@ -66,7 +67,8 @@ public class LectureController {
         return ResponseEntity.created(createUri).body(lectureResource);
     }
 
-    private static ResponseEntity<Errors> getErrors(Errors errors) {
-        return ResponseEntity.badRequest().body(errors);
+    private static ResponseEntity<ErrorsResource> getErrors(Errors errors) {
+
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 }
