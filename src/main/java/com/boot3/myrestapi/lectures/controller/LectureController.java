@@ -8,6 +8,8 @@ import com.boot3.myrestapi.lectures.dto.hateoas.LectureResource;
 import com.boot3.myrestapi.lectures.models.Lecture;
 import com.boot3.myrestapi.lectures.models.LectureRepository;
 import com.boot3.myrestapi.lectures.validator.LectureValidator;
+import com.boot3.myrestapi.security.annot.CurrentUser;
+import com.boot3.myrestapi.security.userinfo.UserInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -108,7 +110,9 @@ public class LectureController {
         return ResponseEntity.ok(pagedResources);
     }
     @PostMapping
-    public ResponseEntity<?> createLecture(@RequestBody @Valid LectureReqDto lectureReqDto, Errors errors) {
+    public ResponseEntity<?> createLecture(@RequestBody @Valid LectureReqDto lectureReqDto,
+                                           Errors errors,
+                                           @CurrentUser UserInfo currentUser) {
         //Validation 어노테이션을 사용해서 입력항목 검증하기
         if(errors.hasErrors()) {
             return getErrors(errors);
