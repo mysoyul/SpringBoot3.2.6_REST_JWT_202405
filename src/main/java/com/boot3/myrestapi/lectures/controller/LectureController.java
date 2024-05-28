@@ -128,9 +128,16 @@ public class LectureController {
         //offline, free 필드의 값을 설정
         lecture.update();
 
+        //Lecture와 UserInfo 연관관계 설정
+        lecture.setUserInfo(currentUser);
+
         Lecture addedLecture = lectureRepository.save(lecture);
         // Entity => ResDTO 변환
         LectureResDto lectureResDto = modelMapper.map(addedLecture, LectureResDto.class);
+
+        //LectureResDto 에 UserInfo 객체의 email set
+        lectureResDto.setEmail(addedLecture.getUserInfo().getEmail());
+
         WebMvcLinkBuilder selfLinkBuilder = linkTo(LectureController.class).slash(lectureResDto.getId());
         URI createUri = selfLinkBuilder.toUri();
 
