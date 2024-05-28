@@ -1,6 +1,7 @@
 package com.boot3.myrestapi.lectures.controller;
 
 import com.boot3.myrestapi.common.errors.ErrorsResource;
+import com.boot3.myrestapi.common.exception.BusinessException;
 import com.boot3.myrestapi.lectures.dto.LectureReqDto;
 import com.boot3.myrestapi.lectures.dto.LectureResDto;
 import com.boot3.myrestapi.lectures.dto.hateoas.LectureResource;
@@ -41,11 +42,15 @@ public class LectureController {
 
     @GetMapping("/{id}")
     public ResponseEntity getLecture(@PathVariable Integer id) {
-        Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
-        if(optionalLecture.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        Lecture lecture = optionalLecture.get();
+//        Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
+//        if(optionalLecture.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        Lecture lecture = optionalLecture.get();
+
+        String errMsg = String.format("Id = %d Lecture Not Found", id);
+        Lecture lecture = this.lectureRepository.findById(id)
+                              .orElseThrow(() -> new BusinessException());
         LectureResDto lectureResDto = modelMapper.map(lecture, LectureResDto.class);
         LectureResource lectureResource = new LectureResource(lectureResDto);
         return ResponseEntity.ok(lectureResource);
