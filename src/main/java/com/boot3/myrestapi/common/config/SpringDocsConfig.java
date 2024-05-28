@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 public class SpringDocsConfig {
     @Bean
     public OpenAPI openAPI() {
-
         Info info = new Info()
                 .title("Lecture API 문서") // 타이틀
                 //.version(version) // 문서 버전
