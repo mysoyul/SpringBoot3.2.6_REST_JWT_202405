@@ -31,7 +31,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         // Create response content
         ErrorObject errorObject = new ErrorObject();
         errorObject.setStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
-        errorObject.setMessage("요청된 리소스에 대한 유효한 인증 자격 증명(Authentication)이 실패 하였습니다!!");
+        if(authException.getMessage() != null){
+            errorObject.setMessage(authException.getMessage());
+        }else {
+            errorObject.setMessage("요청된 리소스에 대한 유효한 인증 자격 증명(Authentication)이 실패 하였습니다!!");
+        }
 
         String json = mapper.writerWithDefaultPrettyPrinter()
                 .writeValueAsString(errorObject);
