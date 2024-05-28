@@ -28,10 +28,11 @@ public class UserInfoController {
                         authRequest.getEmail(),
                         authRequest.getPassword()
                 ));
+        //인증 성공
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(authRequest.getEmail());
         } else {
-            throw new UsernameNotFoundException("invalid user request !");
+            throw new UsernameNotFoundException("Invalid user request !");
         }
     }
     @PostMapping("/new")
