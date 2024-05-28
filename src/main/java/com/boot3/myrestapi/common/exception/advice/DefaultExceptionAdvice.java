@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -51,6 +53,18 @@ public class DefaultExceptionAdvice {
         result.put("httpStatus", HttpStatus.BAD_REQUEST.value());
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    //403 예외 발생
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public void accessDeniedExceptionHandler(Exception e) {
+        throw new AccessDeniedException(e.getMessage());
+    }
+
+    //401 예외 발생
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public void badCredentialExceptionHandler(BadCredentialsException e){
+        throw new BadCredentialsException(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
