@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class LambdaTest {
-    @Test
+    @Test @Disabled
     public void runnable() {
         //1. Anonymous Inner class
         Thread t1 = new Thread(new Runnable() {
@@ -22,7 +22,7 @@ public class LambdaTest {
         t2.start();
     }
     
-    @Test @Disabled
+    @Test
     public void consumer() {
         List<String> list = List.of("aa", "bb", "cc");//Immutable List
         //1. Anonymous Inner class
