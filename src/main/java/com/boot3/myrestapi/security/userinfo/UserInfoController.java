@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/users")
 public class UserInfoController {
@@ -30,13 +32,18 @@ public class UserInfoController {
                 ));
         //인증 성공
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getEmail());
+            //return jwtService.generateToken(authRequest.getEmail());
+            UserInfo userInfo = repository.findByEmail(authRequest.getEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("user not found " + authRequest.getEmail()));
+            return jwtService.generateTokenUserId(userInfo.getUserId());
         } else {
             throw new UsernameNotFoundException("Invalid user request !");
         }
     }
     @PostMapping("/new")
     public String addNewUser(@RequestBody UserInfo userInfo){
+        //userId에 UUID 값으로 저장
+        userInfo.setUserId(UUID.randomUUID().toString());
         userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         UserInfo savedUserInfo = repository.save(userInfo);
         return savedUserInfo.getName() + " user added!!";

@@ -87,4 +87,15 @@ public class JwtService {
                 .compact();
     }
 
+    public String generateTokenUserId(String userId){
+        // ACCESS_EXPIRE 1500초 => 25분
+        Date exprireDate = Date.from(Instant.now().plusSeconds(ACCESS_EXPIRE));
+
+        return Jwts.builder()
+                .signWith(KEY, ALGORITHM)
+                .subject(userId)
+                .issuedAt(new Date())
+                .expiration(exprireDate)
+                .compact();
+    }
 }
