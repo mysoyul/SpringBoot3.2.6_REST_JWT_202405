@@ -66,7 +66,7 @@ public class JwtService {
             return true;
         } catch (Exception ex) {
             throw new AuthenticationCredentialsNotFoundException(
-                    "JWT was exprired or incorrect",
+                    "JWT was expired or incorrect",
                     ex.fillInStackTrace());
         }
     }
@@ -75,10 +75,14 @@ public class JwtService {
         // ACCESS_EXPIRE 3600초 => 60분
         Date exprireDate = Date.from(Instant.now().plusSeconds(ACCESS_EXPIRE));
 
-        return Jwts.builder()
+        return Jwts.builder() //JwtBuilder
+                // secret, ALGORITHM 값 설정
                 .signWith(KEY, ALGORITHM)
+                // payload 의 subject 에 인증시 사용된 username(email 주소) - 변경이 필요함
                 .subject(userName)
+                // token 발행시간
                 .issuedAt(new Date())
+                // token 만료시간
                 .expiration(exprireDate)
                 .compact();
     }
