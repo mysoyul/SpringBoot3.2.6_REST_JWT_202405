@@ -18,6 +18,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +51,7 @@ public class LectureController {
 
         String errMsg = String.format("Id = %d Lecture Not Found", id);
         Lecture lecture = this.lectureRepository.findById(id)
-                              .orElseThrow(() -> new BusinessException());
+                              .orElseThrow(() -> new BusinessException(errMsg, HttpStatus.NOT_FOUND));
         LectureResDto lectureResDto = modelMapper.map(lecture, LectureResDto.class);
         LectureResource lectureResource = new LectureResource(lectureResDto);
         return ResponseEntity.ok(lectureResource);
