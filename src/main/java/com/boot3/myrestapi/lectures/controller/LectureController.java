@@ -45,10 +45,7 @@ public class LectureController {
     public ResponseEntity updateLecture(@PathVariable Integer id,
                                         @RequestBody @Valid LectureReqDto lectureReqDto,
                                         Errors errors) {
-        String errMsg = String.format("Id = %d Lecture Not Found", id);
-        Lecture existingLecture =
-                this.lectureRepository.findById(id)
-                        .orElseThrow(() -> new BusinessException(errMsg, HttpStatus.NOT_FOUND));
+        Lecture existingLecture = getExistingLecture(id);
 
         if (errors.hasErrors()) {
             return getErrors(errors);
@@ -67,6 +64,14 @@ public class LectureController {
         return ResponseEntity.ok(lectureResource);
     }
 
+    private Lecture getExistingLecture(Integer id) {
+        String errMsg = String.format("Id = %d Lecture Not Found", id);
+        Lecture existingLecture =
+                this.lectureRepository.findById(id)
+                        .orElseThrow(() -> new BusinessException(errMsg, HttpStatus.NOT_FOUND));
+        return existingLecture;
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity getLecture(@PathVariable Integer id) {
 //        Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
@@ -75,9 +80,7 @@ public class LectureController {
 //        }
 //        Lecture lecture = optionalLecture.get();
 
-        String errMsg = String.format("Id = %d Lecture Not Found", id);
-        Lecture lecture = this.lectureRepository.findById(id)
-                              .orElseThrow(() -> new BusinessException(errMsg, HttpStatus.NOT_FOUND));
+        Lecture lecture = getExistingLecture(id);
 
         LectureResDto lectureResDto = modelMapper.map(lecture, LectureResDto.class);
         LectureResource lectureResource = new LectureResource(lectureResDto);
