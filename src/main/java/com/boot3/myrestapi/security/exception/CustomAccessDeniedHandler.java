@@ -21,13 +21,13 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         // Set response content type to JSON
         response.setContentType("application/json;charset=UTF-8");
-        // Set response code
+        // Set response code 403
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         ObjectMapper mapper = new ObjectMapper();
         ErrorObject errorObject = new ErrorObject();
         errorObject.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
-        errorObject.setMessage("요청된 리소스에 대한 유효한 권한이 없습니다!!");
+        errorObject.setMessage("요청된 리소스에 대한 유효한 권한(Authorization)이 없습니다!!");
 
         // Add content to the response
         String json = mapper.writerWithDefaultPrettyPrinter()
