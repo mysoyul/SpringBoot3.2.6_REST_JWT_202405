@@ -23,6 +23,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +48,14 @@ public class LectureController {
     @PutMapping("/{id}")
     public ResponseEntity updateLecture(@PathVariable Integer id,
                                         @RequestBody @Valid LectureReqDto lectureReqDto,
-                                        Errors errors) {
+                                        Errors errors,
+                                        @CurrentUser UserInfo currentUser) {
         Lecture existingLecture = getExistingLecture(id);
+        //Lecture가 참조하는 UserInfo 객체와 인증한 UserInfo 객체가 다르면 401 인증 오류
+        if((existingLecture.getUserInfo() != null) && (!existingLecture.getUserInfo().equals(currentUser))) {
+            throw new BadCredentialsException("등록한 User와 수정을 요청한 User가 다릅니다.");
+            //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
 
         if (errors.hasErrors()) {
             return getErrors(errors);
@@ -62,6 +69,10 @@ public class LectureController {
         existingLecture.update();
         Lecture savedLecture = this.lectureRepository.save(existingLecture);
         LectureResDto lectureResDto = modelMapper.map(savedLecture, LectureResDto.class);
+
+        //Lecture 객체와 연관된 UserInfo 객체가 있다면 LectureResDto에 email을 set
+        if(savedLecture.getUserInfo() != null)
+            lectureResDto.setEmail(savedLecture.getUserInfo().getEmail());
 
         LectureResource lectureResource = new LectureResource(lectureResDto);
         return ResponseEntity.ok(lectureResource);
